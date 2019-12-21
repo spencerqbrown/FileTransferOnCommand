@@ -73,7 +73,10 @@ public class TransferToPhone extends javax.swing.JFrame {
         removeSourceButton = new javax.swing.JButton();
         selDestLabel = new javax.swing.JLabel();
         selDestField = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        removeDestinationButton = new javax.swing.JButton();
+        clearSourcesButton = new javax.swing.JButton();
+        saveProfileButton = new javax.swing.JButton();
+        loadProfileButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -123,10 +126,31 @@ public class TransferToPhone extends javax.swing.JFrame {
 
         selDestField.setEditable(false);
 
-        jButton1.setText("Remove destination");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        removeDestinationButton.setText("Remove destination");
+        removeDestinationButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                removeDestinationButtonActionPerformed(evt);
+            }
+        });
+
+        clearSourcesButton.setText("Clear sources");
+        clearSourcesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearSourcesButtonActionPerformed(evt);
+            }
+        });
+
+        saveProfileButton.setText("Save profile...");
+        saveProfileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveProfileButtonActionPerformed(evt);
+            }
+        });
+
+        loadProfileButton.setText("Load profile...");
+        loadProfileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadProfileButtonActionPerformed(evt);
             }
         });
 
@@ -140,29 +164,37 @@ public class TransferToPhone extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(selectSourceButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(messageLabel))
+                        .addComponent(messageLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(saveProfileButton))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(selectDestinationButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(destLabel))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(transferButton)
-                        .addGap(219, 219, 219)
-                        .addComponent(transferLabel))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(selSourcesLabel))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(selDestField, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fileListPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(removeSourceButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addComponent(selDestLabel)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(selectDestinationButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(destLabel)
+                                .addGap(194, 194, 194)
+                                .addComponent(loadProfileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(transferButton)
+                                .addGap(219, 219, 219)
+                                .addComponent(transferLabel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(selSourcesLabel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(selDestField, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(fileListPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(removeSourceButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(removeDestinationButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(clearSourcesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addComponent(selDestLabel)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -171,23 +203,28 @@ public class TransferToPhone extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(selectSourceButton)
-                    .addComponent(messageLabel))
+                    .addComponent(messageLabel)
+                    .addComponent(saveProfileButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(selectDestinationButton)
-                    .addComponent(destLabel))
+                    .addComponent(destLabel)
+                    .addComponent(loadProfileButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(selSourcesLabel)
                 .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(removeSourceButton)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(removeSourceButton)
+                        .addGap(5, 5, 5)
+                        .addComponent(clearSourcesButton))
                     .addComponent(fileListPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(selDestLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(selDestField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(removeDestinationButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(transferButton)
@@ -260,16 +297,37 @@ public class TransferToPhone extends javax.swing.JFrame {
         }
     }
     
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void removeDestinationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeDestinationButtonActionPerformed
         destination = null;
         selDestField.setText("");
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_removeDestinationButtonActionPerformed
 
     private void fileListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fileListKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
             removeSelected();
         }
     }//GEN-LAST:event_fileListKeyPressed
+
+    private void clearSourcesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearSourcesButtonActionPerformed
+        listElements.clear();
+        files.clear();
+    }//GEN-LAST:event_clearSourcesButtonActionPerformed
+
+    private void saveProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveProfileButtonActionPerformed
+        // save file paths
+        
+        // save destination paths
+        
+    }//GEN-LAST:event_saveProfileButtonActionPerformed
+
+    private void loadProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadProfileButtonActionPerformed
+        // check format
+        
+        // load file paths
+        
+        // load destination paths
+        
+    }//GEN-LAST:event_loadProfileButtonActionPerformed
 
    
     private void moveFiles() {
@@ -346,12 +404,15 @@ public class TransferToPhone extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton clearSourcesButton;
     private javax.swing.JLabel destLabel;
     private javax.swing.JList<String> fileList;
     private javax.swing.JScrollPane fileListPanel;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton loadProfileButton;
     private javax.swing.JLabel messageLabel;
+    private javax.swing.JButton removeDestinationButton;
     private javax.swing.JButton removeSourceButton;
+    private javax.swing.JButton saveProfileButton;
     private javax.swing.JTextField selDestField;
     private javax.swing.JLabel selDestLabel;
     private javax.swing.JLabel selSourcesLabel;
