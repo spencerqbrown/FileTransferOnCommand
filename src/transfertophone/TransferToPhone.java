@@ -339,7 +339,9 @@ public class TransferToPhone extends javax.swing.JFrame {
         }
         // save destination path
         lines.add(destinationHeader);
-        lines.add(destination.getAbsolutePath());
+        if (destination != null) {
+            lines.add(destination.getAbsolutePath());
+        }
         // actual saving
         int returnValue = saveChooser.showOpenDialog(this);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -352,6 +354,10 @@ public class TransferToPhone extends javax.swing.JFrame {
     }//GEN-LAST:event_saveProfileButtonActionPerformed
 
     private void loadProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadProfileButtonActionPerformed
+        // reinitialize files and destination
+        files.clear();
+        destination = null;
+        listElements.clear();
         // get file
         ArrayList<String> lines = new ArrayList<>();
         int returnValue = loadChooser.showOpenDialog(this);
@@ -389,21 +395,29 @@ public class TransferToPhone extends javax.swing.JFrame {
             }
             i++;
         }
-        if (!lines.get(lines.size() - 2).equals(destinationHeader)) {
-            System.out.println("Invalid destination header");
-            return;
+        boolean hasDest = false;
+        if (lines.get(lines.size() - 2).equals(destinationHeader)) {
+            hasDest = true;
         }
-        if (!lines.get(lines.size() - 1).matches(filePathRegex)) {
-            System.out.println("Invalid destination path");
-            return;
-        } 
+        if (hasDest) {
+            if (!lines.get(lines.size() - 1).matches(filePathRegex)) {
+                System.out.println("Invalid destination path");
+                return;
+            } 
+        }
         // load file paths
         i = 1;
+        File curFile;
         while (!lines.get(i).equals(destinationHeader)) {
-            files.add(new File(lines.get(i)));
+            curFile = new File(lines.get(i));
+            files.add(curFile);
+            listElements.addElement(lines.get(i));
+            i++;
         }
         // load destination path
-        destination = new File(lines.get(lines.size() - 1));
+        if (hasDest) {
+            destination = new File(lines.get(lines.size() - 1));
+        }
     }//GEN-LAST:event_loadProfileButtonActionPerformed
 
    
