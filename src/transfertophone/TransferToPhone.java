@@ -188,8 +188,8 @@ public class TransferToPhone extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(selectDestinationButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(destLabel)
-                                .addGap(194, 194, 194)
+                                .addComponent(destLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(68, 68, 68)
                                 .addComponent(loadProfileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(transferButton)
@@ -224,7 +224,7 @@ public class TransferToPhone extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(selectDestinationButton)
-                    .addComponent(destLabel)
+                    .addComponent(destLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(loadProfileButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(selSourcesLabel)
@@ -284,7 +284,7 @@ public class TransferToPhone extends javax.swing.JFrame {
             destLabel.setText("Destination directory set");
             selDestField.setText(destination.getAbsolutePath());
         } else {
-            destLabel.setText("No destination directory selected");
+            destLabel.setText("No destination selected");
         }
     }//GEN-LAST:event_selectDestinationButtonActionPerformed
 
@@ -369,6 +369,9 @@ public class TransferToPhone extends javax.swing.JFrame {
                 System.out.println("Failed to load profile");
                 return;
             }
+        } else {
+            System.out.println("No profile selected");
+            return;
         }
         String curLine;
         if (reader != null) {
@@ -397,13 +400,14 @@ public class TransferToPhone extends javax.swing.JFrame {
         }
         boolean hasDest = false;
         if (lines.get(lines.size() - 2).equals(destinationHeader)) {
+            System.out.println("DEST DETECTION WORKS");
             hasDest = true;
         }
         if (hasDest) {
             if (!lines.get(lines.size() - 1).matches(filePathRegex)) {
                 System.out.println("Invalid destination path");
                 return;
-            } 
+            }
         }
         // load file paths
         i = 1;
@@ -417,6 +421,7 @@ public class TransferToPhone extends javax.swing.JFrame {
         // load destination path
         if (hasDest) {
             destination = new File(lines.get(lines.size() - 1));
+            selDestField.setText(destination.getAbsolutePath());
         }
     }//GEN-LAST:event_loadProfileButtonActionPerformed
 
