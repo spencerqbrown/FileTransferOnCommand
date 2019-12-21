@@ -6,8 +6,11 @@
 package transfertophone;
 
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,6 +19,7 @@ import java.util.ArrayList;
 import java.util.stream.Stream;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -25,9 +29,13 @@ public class TransferToPhone extends javax.swing.JFrame {
     
     private ArrayList<File> files;
     private File destination;
-    JFileChooser sourceChooser;
-    JFileChooser destinationChooser;
-    DefaultListModel<String> listElements;
+    private JFileChooser sourceChooser;
+    private JFileChooser destinationChooser;
+    private JFileChooser saveChooser;
+    private JFileChooser loadChooser;
+    private DefaultListModel<String> listElements;
+    private final static String fileHeader = "***FILES***";
+    private final static String destinationHeader = "***DESTINATION***";
 
     /**
      * Creates new form TransferToPhone
@@ -45,6 +53,14 @@ public class TransferToPhone extends javax.swing.JFrame {
         destinationChooser = new JFileChooser();
         destinationChooser.setCurrentDirectory(new File("C:\\temp"));
         destinationChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        
+        saveChooser = new JFileChooser();
+        saveChooser.setCurrentDirectory(new File("C:\\temp"));
+        saveChooser.setFileFilter(new FileNameExtensionFilter("Text file", "txt"));
+        
+        loadChooser = new JFileChooser();
+        loadChooser.setCurrentDirectory(new File("C:\\temp"));
+        loadChooser.setFileFilter(new FileNameExtensionFilter("Text file", "txt"));
         
         listElements = new DefaultListModel<>();
         fileList.setModel(listElements);
@@ -314,19 +330,80 @@ public class TransferToPhone extends javax.swing.JFrame {
     }//GEN-LAST:event_clearSourcesButtonActionPerformed
 
     private void saveProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveProfileButtonActionPerformed
+        // init
+        ArrayList<String> lines = new ArrayList<>();
+        lines.add(fileHeader);
         // save file paths
-        
-        // save destination paths
-        
+        for (File f: files) {
+            lines.add(f.getAbsolutePath());
+        }
+        // save destination path
+        lines.add(destinationHeader);
+        lines.add(destination.getAbsolutePath());
+        // actual saving
+        int returnValue = saveChooser.showOpenDialog(this);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            try {
+                Files.write(saveChooser.getSelectedFile().toPath(), lines, StandardCharsets.UTF_8);
+            } catch (IOException ioe) {
+                System.out.println("Failed to save file");
+            }
+        }
     }//GEN-LAST:event_saveProfileButtonActionPerformed
 
     private void loadProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadProfileButtonActionPerformed
+        // get file
+        ArrayList<String> lines = new ArrayList<>();
+        int returnValue = loadChooser.showOpenDialog(this);
+        BufferedReader reader = null;
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            try {
+                reader = new BufferedReader(new FileReader(loadChooser.getSelectedFile()));
+            } catch (IOException ioe) {
+                System.out.println("Failed to load profile");
+                return;
+            }
+        }
+        String curLine;
+        if (reader != null) {
+            try {
+                while ((curLine = reader.readLine()) != null) {
+                    lines.add(curLine);
+                }
+            } catch (IOException ioe) {
+                System.out.println("Failed to load profile");
+                return;
+            }
+        }
         // check format
-        
+        String filePathRegex = "([a-zA-Z]:)?(\\\\[a-zA-Z0-9_.-]+)+\\\\?"; // from stackoverflow
+        if (!lines.get(0).equals(fileHeader)) {
+            System.out.println("Invalid file header");
+            return;
+        }
+        int i = 1;
+        while (i < lines.size() && !lines.get(i).equals(destinationHeader)) {
+            if (!lines.get(i).matches(filePathRegex)) {
+                System.out.println("Invalid file path");
+                return;
+            }
+            i++;
+        }
+        if (!lines.get(lines.size() - 2).equals(destinationHeader)) {
+            System.out.println("Invalid destination header");
+            return;
+        }
+        if (!lines.get(lines.size() - 1).matches(filePathRegex)) {
+            System.out.println("Invalid destination path");
+            return;
+        } 
         // load file paths
-        
-        // load destination paths
-        
+        i = 1;
+        while (!lines.get(i).equals(destinationHeader)) {
+            files.add(new File(lines.get(i)));
+        }
+        // load destination path
+        destination = new File(lines.get(lines.size() - 1));
     }//GEN-LAST:event_loadProfileButtonActionPerformed
 
    
