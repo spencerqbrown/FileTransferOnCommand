@@ -190,8 +190,7 @@ public class TransferToPhone extends javax.swing.JFrame {
             for (File f: files) {
                 try {
                     System.out.println(f);
-                    f.renameTo(new File(destination.getAbsolutePath() + "\\" + f.getName()));
-                    Files.copy(f.toPath(), dummyFile.toPath());
+                    Files.copy(f.toPath(), destination.toPath().resolve(f.toPath().getFileName()), REPLACE_EXISTING);
                 } catch (IOException ioe) {
                     transferLabel.setText("Failed to transfer");
                     // LATER ADD TO LIST OF UNTRANSFERRED FILES
@@ -199,7 +198,7 @@ public class TransferToPhone extends javax.swing.JFrame {
             }
             for (File f: directories) {
                 try {
-                    Files.copy(f.toPath(), dummyFile.toPath());
+                    Files.copy(f.toPath(), destination.toPath().resolve(f.toPath().getFileName()), REPLACE_EXISTING);
                 } catch (IOException ioe) {
                     transferLabel.setText("Failed to transfer");
                     // LATER ADD TO LIST OF UNTRANSFERRED FILES
