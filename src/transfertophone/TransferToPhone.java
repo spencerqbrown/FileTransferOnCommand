@@ -180,6 +180,8 @@ public class TransferToPhone extends javax.swing.JFrame {
     }//GEN-LAST:event_transferButtonActionPerformed
 
     private void moveFiles() {
+        File dummyFile = new File(destination.getAbsolutePath() + "\\dummy_file.txt");
+        System.out.println(dummyFile.toPath());
         if (files.size() == 0 && directories.size() == 0) {
             transferLabel.setText("No sources selected");
         } else if (destination == null) {
@@ -188,7 +190,8 @@ public class TransferToPhone extends javax.swing.JFrame {
             for (File f: files) {
                 try {
                     System.out.println(f);
-                    Files.copy(f.toPath(), destination.toPath(), REPLACE_EXISTING);
+                    f.renameTo(new File(destination.getAbsolutePath() + "\\" + f.getName()));
+                    Files.copy(f.toPath(), dummyFile.toPath());
                 } catch (IOException ioe) {
                     transferLabel.setText("Failed to transfer");
                     // LATER ADD TO LIST OF UNTRANSFERRED FILES
@@ -196,12 +199,13 @@ public class TransferToPhone extends javax.swing.JFrame {
             }
             for (File f: directories) {
                 try {
-                    Files.copy(f.toPath(), destination.toPath(), REPLACE_EXISTING);
+                    Files.copy(f.toPath(), dummyFile.toPath());
                 } catch (IOException ioe) {
                     transferLabel.setText("Failed to transfer");
                     // LATER ADD TO LIST OF UNTRANSFERRED FILES
                 }
             }
+            dummyFile.delete();
             transferLabel.setText("Files successfully transferred");
         }
         
