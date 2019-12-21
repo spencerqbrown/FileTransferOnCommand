@@ -180,8 +180,6 @@ public class TransferToPhone extends javax.swing.JFrame {
     }//GEN-LAST:event_transferButtonActionPerformed
 
     private void moveFiles() {
-        File dummyFile = new File(destination.getAbsolutePath() + "\\dummy_file.txt");
-        System.out.println(dummyFile.toPath());
         if (files.size() == 0 && directories.size() == 0) {
             transferLabel.setText("No sources selected");
         } else if (destination == null) {
@@ -189,23 +187,42 @@ public class TransferToPhone extends javax.swing.JFrame {
         } else {
             for (File f: files) {
                 try {
-                    System.out.println(f);
-                    Files.copy(f.toPath(), destination.toPath().resolve(f.toPath().getFileName()), REPLACE_EXISTING);
+                    Files.walk(f.toPath()).forEach(p -> fileCopy(p, destination.toPath()));
                 } catch (IOException ioe) {
                     transferLabel.setText("Failed to transfer");
-                    // LATER ADD TO LIST OF UNTRANSFERRED FILES
                 }
+//                try {
+//                    System.out.println(f);
+//                    Files.copy(f.toPath(), destination.toPath().resolve(f.toPath().getFileName()), REPLACE_EXISTING);
+//                } catch (IOException ioe) {
+//                    transferLabel.setText("Failed to transfer");
+//                    // LATER ADD TO LIST OF UNTRANSFERRED FILES
+//                }
             }
             for (File f: directories) {
                 try {
-                    Files.copy(f.toPath(), destination.toPath().resolve(f.toPath().getFileName()), REPLACE_EXISTING);
+                    Files.walk(f.toPath()).forEach(p -> fileCopy(p, destination.toPath()));
                 } catch (IOException ioe) {
                     transferLabel.setText("Failed to transfer");
-                    // LATER ADD TO LIST OF UNTRANSFERRED FILES
                 }
+//                try {
+//                    Files.copy(f.toPath(), destination.toPath().resolve(f.toPath().getFileName()), REPLACE_EXISTING);
+//                } catch (IOException ioe) {
+//                    transferLabel.setText("Failed to transfer");
+//                    // LATER ADD TO LIST OF UNTRANSFERRED FILES
+//                }
             }
-            dummyFile.delete();
             transferLabel.setText("Files successfully transferred");
+        }
+        
+    }
+    
+    private void fileCopy(Path source, Path dest) {
+        System.out.println(source);
+        try {
+            Files.copy(source, dest.resolve(source.getFileName()), REPLACE_EXISTING);
+        } catch (IOException ioe) {
+            transferLabel.setText("Failed to transfer");
         }
         
     }
