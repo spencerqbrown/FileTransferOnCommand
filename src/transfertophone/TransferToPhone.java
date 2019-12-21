@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.ArrayList;
+import java.util.stream.Stream;
 import javax.swing.JFileChooser;
 
 /**
@@ -21,7 +22,6 @@ import javax.swing.JFileChooser;
 public class TransferToPhone extends javax.swing.JFrame {
     
     private ArrayList<File> files;
-    private ArrayList<File> directories;
     private File destination;
     JFileChooser sourceChooser;
     JFileChooser destinationChooser;
@@ -34,7 +34,6 @@ public class TransferToPhone extends javax.swing.JFrame {
         initComponents();      
         
         files = new ArrayList<>();
-        directories = new ArrayList<>();
         
         sourceChooser = new JFileChooser();
         sourceChooser.setCurrentDirectory(new File("C:\\temp"));
@@ -134,29 +133,18 @@ public class TransferToPhone extends javax.swing.JFrame {
         
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             selectedFiles = sourceChooser.getSelectedFiles();
-            if (selectedFiles.length == 0) {
-//                sourcePath = sourceChooser.getSelectedFile().toPath();
-                sourcePath = sourceChooser.getSelectedFile();
+            for (File f: selectedFiles) {
+                sourcePath = f;
                 System.out.println(sourcePath);
-                if (!directories.contains(sourcePath)) {
-                    directories.add(sourcePath);
-                }
-                messageLabel.setText("Directory added to sources");
-            } else {
-                for (File f: selectedFiles) {
-                    sourcePath = f;
-                    System.out.println(sourcePath);
-                    if (!files.contains(sourcePath)) {
-                        files.add(sourcePath);
-                    }
-                }
-                if (selectedFiles.length == 1) {
-                    messageLabel.setText("File added to sources");
-                } else {
-                    messageLabel.setText("Files added to sources");
+                if (!files.contains(sourcePath)) {
+                    files.add(sourcePath);
                 }
             }
-            
+            if (selectedFiles.length == 1) {
+                messageLabel.setText("File added to sources");
+            } else {
+                messageLabel.setText("Files added to sources");
+            }   
         } else {
             messageLabel.setText("No file or directory selected");
         }
@@ -180,41 +168,26 @@ public class TransferToPhone extends javax.swing.JFrame {
     }//GEN-LAST:event_transferButtonActionPerformed
 
     private void moveFiles() {
-        if (files.size() == 0 && directories.size() == 0) {
+        File newDir;
+        if (files.size() == 0) {
             transferLabel.setText("No sources selected");
         } else if (destination == null) {
             transferLabel.setText("No destination selected");
         } else {
             for (File f: files) {
-                try {
-                    Files.walk(f.toPath()).forEach(p -> fileCopy(p, destination.toPath()));
-                } catch (IOException ioe) {
-                    transferLabel.setText("Failed to transfer");
-                }
-//                try {
-//                    System.out.println(f);
-//                    Files.copy(f.toPath(), destination.toPath().resolve(f.toPath().getFileName()), REPLACE_EXISTING);
-//                } catch (IOException ioe) {
-//                    transferLabel.setText("Failed to transfer");
-//                    // LATER ADD TO LIST OF UNTRANSFERRED FILES
-//                }
-            }
-            for (File f: directories) {
-                try {
-                    Files.walk(f.toPath()).forEach(p -> fileCopy(p, destination.toPath()));
-                } catch (IOException ioe) {
-                    transferLabel.setText("Failed to transfer");
-                }
-//                try {
-//                    Files.copy(f.toPath(), destination.toPath().resolve(f.toPath().getFileName()), REPLACE_EXISTING);
-//                } catch (IOException ioe) {
-//                    transferLabel.setText("Failed to transfer");
-//                    // LATER ADD TO LIST OF UNTRANSFERRED FILES
-//                }
+                univCopy(f, destination);
             }
             transferLabel.setText("Files successfully transferred");
         }
         
+    }
+    
+    private void folderCopy(Path source, Path dest) {
+        try {
+            Files.walk(source).forEach(p -> fileCopy(p, dest.resolve(source.relativize(p))));
+        } catch (IOException ioe) {
+            transferLabel.setText("Failed to transfer");
+        }
     }
     
     private void fileCopy(Path source, Path dest) {
@@ -224,7 +197,27 @@ public class TransferToPhone extends javax.swing.JFrame {
         } catch (IOException ioe) {
             transferLabel.setText("Failed to transfer");
         }
-        
+    }
+    
+    private void univCopy(File source, File dest) {
+        if (source.isDirectory()) {
+            String[] files;
+            File newDir = new File(destination.getAbsolutePath() + "\\" + source.getName());
+            System.out.println(newDir.getAbsolutePath());
+            newDir.mkdir();
+            files = source.list();
+            File sourceFile;
+            for (String f: files) {
+                sourceFile = new File(source, f);
+                univCopy(sourceFile, newDir);
+            }
+        } else {
+            try {
+                Files.copy(source.toPath(), dest.toPath().resolve(source.getName()), REPLACE_EXISTING);
+            } catch (IOException ioe) {
+                transferLabel.setText("Failed to transfer");
+            }
+        }
     }
     
     /**
