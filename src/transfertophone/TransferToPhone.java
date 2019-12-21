@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
@@ -19,9 +20,9 @@ import javax.swing.JFileChooser;
  */
 public class TransferToPhone extends javax.swing.JFrame {
     
-    private ArrayList<Path> files;
-    private ArrayList<Path> directories;
-    private Path destination;
+    private ArrayList<String> files;
+    private ArrayList<String> directories;
+    private String destination;
     JFileChooser sourceChooser;
     JFileChooser destinationChooser;
    
@@ -128,20 +129,23 @@ public class TransferToPhone extends javax.swing.JFrame {
 
     private void selectSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectSourceButtonActionPerformed
         int returnValue = sourceChooser.showOpenDialog(this);
-        Path sourcePath;
+        String sourcePath;
         File[] selectedFiles;
         
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             selectedFiles = sourceChooser.getSelectedFiles();
             if (selectedFiles.length == 0) {
-                sourcePath = sourceChooser.getSelectedFile().toPath();
+//                sourcePath = sourceChooser.getSelectedFile().toPath();
+                sourcePath = sourceChooser.getSelectedFile().getAbsolutePath();
+                System.out.println(sourcePath);
                 if (!directories.contains(sourcePath)) {
                     directories.add(sourcePath);
                 }
                 messageLabel.setText("Directory added to sources");
             } else {
                 for (File f: selectedFiles) {
-                    sourcePath = f.toPath();
+                    sourcePath = f.getAbsolutePath();
+                    System.out.println(sourcePath);
                     if (!files.contains(sourcePath)) {
                         files.add(sourcePath);
                     }
@@ -160,9 +164,9 @@ public class TransferToPhone extends javax.swing.JFrame {
 
     private void selectDestinationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectDestinationButtonActionPerformed
         int returnValue = destinationChooser.showOpenDialog(this);
-        Path destPath;
+        String destPath;
         if (returnValue == JFileChooser.APPROVE_OPTION) {
-            destPath = destinationChooser.getSelectedFile().toPath();
+            destPath = destinationChooser.getSelectedFile().getAbsolutePath();
             System.out.println(destPath);
             destination = destPath;
             destLabel.setText("Destination directory set");
@@ -181,18 +185,18 @@ public class TransferToPhone extends javax.swing.JFrame {
         } else if (destination == null) {
             transferLabel.setText("No destination selected");
         } else {
-            for (Path p: files) {
+            for (String s: files) {
                 try {
-                    System.out.println(p);
-                    Files.copy(p, destination, REPLACE_EXISTING);
+                    System.out.println(s);
+                    Files.copy(Paths.get(s), Paths.get(destination), REPLACE_EXISTING);
                 } catch (IOException ioe) {
                     transferLabel.setText("Failed to transfer");
                     // LATER ADD TO LIST OF UNTRANSFERRED FILES
                 }
             }
-            for (Path p: directories) {
+            for (String s: directories) {
                 try {
-                    Files.copy(p, destination, REPLACE_EXISTING);
+                    Files.copy(Paths.get(s), Paths.get(destination), REPLACE_EXISTING);
                 } catch (IOException ioe) {
                     transferLabel.setText("Failed to transfer");
                     // LATER ADD TO LIST OF UNTRANSFERRED FILES
