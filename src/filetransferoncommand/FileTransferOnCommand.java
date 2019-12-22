@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package transfertophone;
+package filetransferoncommand;
 
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
@@ -25,7 +25,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author Spencer
  */
-public class TransferToPhone extends javax.swing.JFrame {
+public class FileTransferOnCommand extends javax.swing.JFrame {
     
     private ArrayList<File> files;
     private File destination;
@@ -40,7 +40,7 @@ public class TransferToPhone extends javax.swing.JFrame {
     /**
      * Creates new form TransferToPhone
      */
-    public TransferToPhone() {
+    public FileTransferOnCommand() {
         initComponents();      
         
         files = new ArrayList<>();
@@ -481,20 +481,21 @@ public class TransferToPhone extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TransferToPhone.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FileTransferOnCommand.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TransferToPhone.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FileTransferOnCommand.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TransferToPhone.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FileTransferOnCommand.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TransferToPhone.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FileTransferOnCommand.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TransferToPhone().setVisible(true);
+                new FileTransferOnCommand().setVisible(true);
             }
         });
     }
